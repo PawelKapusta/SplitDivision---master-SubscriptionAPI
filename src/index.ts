@@ -31,7 +31,7 @@ app.get("/", (req, res) => {
   res.send("Hello World! from Subscription API");
 });
 
-//groups
+//subscriptions
 app.get("/api/v1/subscriptions", subscriptionRouter);
 app.get("/api/v1/subscriptions/:id", subscriptionRouter);
 app.post("/api/v1/subscriptions", subscriptionRouter);
