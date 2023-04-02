@@ -32,11 +32,11 @@ app.get("/", (req, res) => {
 });
 
 //groups
-app.get("/api/v1/subscription", subscriptionRouter);
-app.get("/api/v1/subscription/:id", subscriptionRouter);
-app.post("/api/v1/subscription", subscriptionRouter);
-app.put("/api/v1/subscription/:id", subscriptionRouter);
-app.delete("/api/v1/subscription/:id", subscriptionRouter);
+app.get("/api/v1/subscriptions", subscriptionRouter);
+app.get("/api/v1/subscriptions/:id", subscriptionRouter);
+app.post("/api/v1/subscriptions", subscriptionRouter);
+app.put("/api/v1/subscriptions/:id", subscriptionRouter);
+app.delete("/api/v1/subscriptions/:id", subscriptionRouter);
 
 app.listen(port, () => {
   consoleLogger.info("Starting running SubscriptionAPI app...");
