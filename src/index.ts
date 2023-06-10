@@ -11,7 +11,7 @@ import { consoleLogger } from "./utils/logger";
 dotenv.config();
 
 const app = express();
-const port = 5004;
+const port = 5005;
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
@@ -31,10 +31,11 @@ app.get("/", (req, res) => {
   res.send("Hello World! from Subscription API");
 });
 
-//subscriptions
 app.get("/api/v1/subscriptions", subscriptionRouter);
 app.get("/api/v1/subscriptions/:id", subscriptionRouter);
+app.get("/api/v1/subscriptions/user/:id", subscriptionRouter);
 app.post("/api/v1/subscriptions", subscriptionRouter);
+app.post("/api/v1/subscriptions/user", subscriptionRouter);
 app.put("/api/v1/subscriptions/:id", subscriptionRouter);
 app.delete("/api/v1/subscriptions/:id", subscriptionRouter);
 

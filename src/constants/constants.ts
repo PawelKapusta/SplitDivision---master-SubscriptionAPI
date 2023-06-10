@@ -22,6 +22,12 @@ export interface SubscriptionAttributes {
   features: Record<string, unknown>;
 }
 
+export interface SubscriptionsUsersAttributes {
+  id: string;
+  subscription_id: string;
+  user_id: string;
+}
+
 export type ErrorType = string | { error: string };
 
 export type UpdateSubscriptionRequest = {
@@ -30,3 +36,8 @@ export type UpdateSubscriptionRequest = {
   };
   body: Partial<SubscriptionAttributes>;
 };
+
+export interface UserSubscriptionFormData {
+  user_id: string;
+  subscription_id: string;
+}

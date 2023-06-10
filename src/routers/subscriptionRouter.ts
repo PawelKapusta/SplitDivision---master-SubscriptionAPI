@@ -1,13 +1,16 @@
-import express from "express";
-import { Request, Response } from "express";
+import express, { Request, Response } from "express";
 import { v4 as uuidv4 } from "uuid";
 import { logger } from "../utils/logger";
 import {
-  SubscriptionAttributes,
   ErrorType,
+  SubscriptionAttributes,
+  SubscriptionsUsersAttributes,
   UpdateSubscriptionRequest,
+  UserSubscriptionFormData,
 } from "../constants/constants";
 import Subscription from "../models/subscriptionModel";
+import SubscriptionsUsers from "../models/subscriptionsUsersModel";
+import { Op } from "sequelize";
 
 const router = express.Router();
 
@@ -52,6 +55,44 @@ router.get(
   },
 );
 
+router.get(
+  "/api/v1/subscriptions/user/:id",
+  async (req: Request, res: Response<SubscriptionAttributes[] | ErrorType>) => {
+    const userId: string = req.params.id;
+
+    try {
+      const subscriptionsUsers: SubscriptionsUsers[] = await SubscriptionsUsers.findAll({
+        where: {
+          user_id: userId,
+        },
+      });
+
+      const subscriptionsIds: string[] = subscriptionsUsers.map(
+        subscription => subscription.dataValues.subscription_id,
+      );
+
+      const subscriptions: SubscriptionAttributes[] = await Subscription.findAll({
+        where: {
+          id: {
+            [Op.in]: subscriptionsIds,
+          },
+        },
+      });
+
+      if (!subscriptions) {
+        return res.status(404).send("Subscriptions not found");
+      }
+
+      return res.status(200).json(subscriptions);
+    } catch (error) {
+      logger.error(error.stack);
+      logger.error(error.message);
+      logger.error(error.errors[0].message);
+      return res.status(500).json({ error: error.errors[0].message });
+    }
+  },
+);
+
 router.post(
   "/api/v1/subscriptions",
   async (
@@ -71,6 +112,31 @@ router.post(
       });
 
       return res.status(201).json(newSubscription);
+    } catch (error) {
+      logger.error(error.stack);
+      logger.error(error.message);
+      logger.error(error.errors[0].message);
+      return res.status(500).json({ error: error.errors[0].message });
+    }
+  },
+);
+
+router.post(
+  "/api/v1/subscriptions/user",
+  async (
+    req: Request<Omit<UserSubscriptionFormData, "id">>,
+    res: Response<SubscriptionsUsersAttributes | ErrorType>,
+  ) => {
+    const { user_id, subscription_id }: Omit<UserSubscriptionFormData, "id"> = req.body;
+
+    try {
+      const newSubscriptionsUsers: SubscriptionsUsers = await SubscriptionsUsers.create({
+        id: uuidv4(),
+        subscription_id,
+        user_id,
+      });
+
+      return res.status(201).json(newSubscriptionsUsers);
     } catch (error) {
       logger.error(error.stack);
       logger.error(error.message);
