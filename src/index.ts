@@ -32,6 +32,7 @@ app.get("/", (req, res) => {
 });
 
 app.get("/api/v1/subscriptions", subscriptionRouter);
+app.get("/api/v1/subscriptions/bought", subscriptionRouter);
 app.get("/api/v1/subscriptions/:id", subscriptionRouter);
 app.get("/api/v1/subscriptions/user/:id", subscriptionRouter);
 app.post("/api/v1/subscriptions", subscriptionRouter);

@@ -35,6 +35,27 @@ router.get(
 );
 
 router.get(
+  "/api/v1/subscriptions/bought",
+  async (req: Request, res: Response<SubscriptionsUsersAttributes[] | ErrorType>) => {
+    try {
+      const subscriptionsBought: SubscriptionsUsersAttributes[] =
+        await SubscriptionsUsers.findAll();
+
+      if (!subscriptionsBought) {
+        return res.status(404).send("Subscriptions bought not found");
+      }
+
+      return res.status(200).json(subscriptionsBought);
+    } catch (error) {
+      logger.error(error.stack);
+      logger.error(error.message);
+      logger.error(error.errors[0].message);
+      return res.status(500).json({ error: error.errors[0].message });
+    }
+  },
+);
+
+router.get(
   "/api/v1/subscriptions/:id",
   async (req: Request<{ id: string }>, res: Response<SubscriptionAttributes | ErrorType>) => {
     const subscriptionId: string = req.params.id;
